@@ -696,6 +696,9 @@ void nsToolkitProfileService::CompleteStartup() {
       // We started into an unmanaged profile. Try to set the group profile to
       // be the managed profile belonging to the group.
       mGroupProfile = GetProfileByStoreID(storeID);
+    } else {
+      // We started into a managed profile, so this must be the group profile.
+      mGroupProfile = mCurrent;
     }
   } else if (mCurrent && !mCurrent->mStoreID.IsVoid()) {
     // No store ID in prefs. If the current profile has one we will use it.
