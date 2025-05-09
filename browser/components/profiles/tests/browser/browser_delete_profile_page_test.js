@@ -148,6 +148,16 @@ add_task(async function test_delete_confirm_button() {
     Glean.profilesDelete.confirm.testGetValue(),
     "We have not recorded any Glean data yet"
   );
+  let pingSubmitted = false;
+  // TODO: move this to the new profile page test. and customize it for this delete page test, too.
+  // TODO: do we want a "reason" argument here?
+  // GleanPings.profiles.testBeforeNextSubmit(reason => {
+  //   Assert.equal(reason, "profiles_whatever"); // TODO
+  GleanPings.profiles.testBeforeNextSubmit(() => {
+    pingSubmitted = true;
+    let record = Glean.profiles.closed.testGetValue("delete");
+    Assert.equal(record.length, 1, "Should only have one delete closed event");
+  });
 
   // To test Glean is recorded without actually deleting the test profile,
   // cancel the "quit-application-requested" nsIObserver event.
@@ -178,6 +188,10 @@ add_task(async function test_delete_confirm_button() {
       });
       await assertGlean("profiles", "delete", "confirm");
     }
+  );
+  await BrowserTestUtils.waitForCondition(
+    () => pingSubmitted,
+    "We expect the ping to have been submitted"
   );
 });
 

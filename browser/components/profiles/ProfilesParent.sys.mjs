@@ -200,6 +200,7 @@ export class ProfilesParent extends JSWindowActorParent {
           GleanPings.profiles.submit();
         } else if (source === "about:deleteprofile") {
           Glean.profilesDelete.confirm.record();
+          GleanPings.profiles.submit();
         }
 
         // Notify windows that a quit has been requested.
